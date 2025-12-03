@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
-# System deps
+# System dependencies
 RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/
@@ -16,6 +16,9 @@ COPY . /app
 
 ENV FLASK_APP=app.py
 ENV PORT=8000
+
+# IMPORTANT FIX → expose port for Azure Web App
+EXPOSE 8000
 
 # Use gunicorn for production
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "app:app"]
