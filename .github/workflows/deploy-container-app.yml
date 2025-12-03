@@ -1,12 +1,13 @@
-name: Build and Deploy to Azure Container Apps
+name: Build and Push Image for Web App (Container)
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,14 +28,3 @@ jobs:
       - name: Push Docker image to ACR
         run: |
           docker push ${{ secrets.ACR_LOGIN_SERVER }}/videosharingapp:latest
-
-      - name: Deploy to Azure Container Apps
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az containerapp update \
-              --name videosharingappfinal \
-              --resource-group videosharingapp \
-              --image ${{ secrets.ACR_LOGIN_SERVER }}/videosharingapp:latest \
-              --min-replicas 1 \
-              --max-replicas 3
