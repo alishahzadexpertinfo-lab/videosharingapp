@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <h1>Discover and share short videos</h1>
+    <p>Upload, browse, and comment — a tiny TikTok-style demo built on Flask + Azure.</p>
+    {% if current_user %}
+        <a href="{{ url_for('new_video') }}" class="btn btn-primary">Upload your first video</a>
+    {% else %}
+        <a href="{{ url_for('register') }}" class="btn btn-primary">Get started</a>
+    {% endif %}
+</section>
+
+<section class="video-grid">
+    {% for v in videos %}
+        <article class="video-card">
+            <div class="video-thumbnail">
+                <video src="{{ v.video_url }}" preload="metadata"></video>
+            </div>
+            <div class="video-info">
+                <h2><a href="{{ url_for('video_detail', video_id=v.id) }}">{{ v.title }}</a></h2>
+                <p class="video-meta">by {{ v.username }} · {{ v.created_at[:19].replace('T', ' ') }} UTC</p>
+                <p class="video-desc">{{ v.description[:120] }}{% if v.description|length > 120 %}...{% endif %}</p>
+            </div>
+        </article>
+    {% else %}
+        <p>No videos yet. Be the first to upload!</p>
+    {% endfor %}
+</section>
+{% endblock %}
